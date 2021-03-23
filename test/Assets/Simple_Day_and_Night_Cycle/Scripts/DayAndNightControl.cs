@@ -29,6 +29,18 @@ public class DayAndNightControl : MonoBehaviour {
 	public bool showUI;
 	float lightIntensity; //static variable to see what the current light's insensity is in the inspector
 	Material starMat;
+	public Material night;
+	public Material morning;
+	public Material dusk;
+	public Material earlydawn;
+    public Material dawn;
+	public Material cloudy;
+	public Material earlydusk;
+	public Material halo;
+	public Material midnight;
+	public Material noon;
+	public Material afternoon;
+	public Material earlymorning;
 
 	Camera targetCam;
 
@@ -88,29 +100,84 @@ public class DayAndNightControl : MonoBehaviour {
 
 
 		//change env colors to add mood
+		if (currentTime >= 0f)
+		{
+			RenderSettings.skybox = midnight;
+			lightoff(1);
+		}
 
-		if (currentTime <= 0.2f) {
-			RenderSettings.ambientSkyColor = nightColors.skyColor;
-			RenderSettings.ambientEquatorColor = nightColors.equatorColor;
-			RenderSettings.ambientGroundColor = nightColors.horizonColor;
+		if (currentTime >= 0.1f) {
+			RenderSettings.skybox = earlydusk;
+			lightoff(1);
+
 		}
-		if (currentTime > 0.2f && currentTime < 0.4f) {
-			RenderSettings.ambientSkyColor = dawnColors.skyColor;
-			RenderSettings.ambientEquatorColor = dawnColors.equatorColor;
-			RenderSettings.ambientGroundColor = dawnColors.horizonColor;
+		if (currentTime >= 0.2f) {
+			RenderSettings.skybox = dusk;
+			lightoff(1);
+
 		}
-		if (currentTime > 0.4f && currentTime < 0.75f) {
-			RenderSettings.ambientSkyColor = dayColors.skyColor;
-			RenderSettings.ambientEquatorColor = dayColors.equatorColor;
-			RenderSettings.ambientGroundColor = dayColors.horizonColor;
+		if (currentTime >= 0.3f) {
+			RenderSettings.skybox = earlymorning;
+			lightoff(0);
+
+
 		}
-		if (currentTime > 0.75f) {
-			RenderSettings.ambientSkyColor = dayColors.skyColor;
-			RenderSettings.ambientEquatorColor = dayColors.equatorColor;
-			RenderSettings.ambientGroundColor = dayColors.horizonColor;
+		if (currentTime >= 0.4f) {
+			RenderSettings.skybox = morning;
+			lightoff(0);
 		}
+
+		if (currentTime >= 0.5f)
+		{
+			RenderSettings.skybox = noon;
+			lightoff(0);
+		}
+
+		if (currentTime >= 0.6f)
+		{
+			RenderSettings.skybox = afternoon;
+			lightoff(0);
+		}
+
+		if (currentTime >= 0.7f)
+		{
+			RenderSettings.skybox = noon;
+			lightoff(0);
+		}
+
+		if (currentTime >= 0.9f)
+		{
+			RenderSettings.skybox = earlydawn;
+			lightoff(1);
+		}
+
+		if (currentTime >= 0.8f)
+		{
+			RenderSettings.skybox = dawn;
+			lightoff(1);
+		}
+
+		if (currentTime >= 0.95f)
+		{
+			RenderSettings.skybox = night;
+			lightoff(1);
+		}
+
 
 		directionalLight.intensity = lightIntensity * intensityMultiplier;
+	}
+
+	private void lightoff(int flag)
+    {
+		GameObject[] lamp = GameObject.FindGameObjectsWithTag("lamp");
+		foreach (GameObject l in lamp)
+		{
+			MeshRenderer lamplight = l.GetComponent<MeshRenderer>();
+			if (flag == 0)
+				lamplight.enabled = false;
+			else if (flag == 1)
+				lamplight.enabled = true;
+		}
 	}
 
 	public string TimeOfDay ()
